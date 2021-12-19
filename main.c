@@ -6,7 +6,7 @@
 /*   By: oipadeol <oipadeol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/18 06:28:07 by oipadeol          #+#    #+#             */
-/*   Updated: 2021/12/18 08:49:13 by oipadeol         ###   ########.fr       */
+/*   Updated: 2021/12/19 12:09:57 by oipadeol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,4 +73,5 @@ int	main(int argc, char **argv)
 	// // 	my_mlx_pixel_put(&img, i , 400, 0x0000FFFF);
 	// mlx_put_image_to_window(mlx, mlx_win, img.img, 0, 0);
 	// mlx_loop(mlx);
+	
 }
