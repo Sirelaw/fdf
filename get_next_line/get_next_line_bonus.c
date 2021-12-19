@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: oipadeol <oipadeol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/19 13:06:57 by oipadeol          #+#    #+#             */
-/*   Updated: 2021/12/19 16:17:32 by oipadeol         ###   ########.fr       */
+/*   Updated: 2021/12/19 16:39:04 by oipadeol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 void	join_ret_stat(char **ret, char stat[BUFFER_SIZE + 1], int i, int j)
 {
@@ -85,7 +85,7 @@ int	check_static(char **ret, char stat[BUFFER_SIZE + 1])
 
 char	*get_next_line(int fd)
 {
-	static char	stat[BUFFER_SIZE + 1];
+	static char	stat[OPEN_MAX][BUFFER_SIZE + 1];
 	char		*ret;
 	int			i;
 
@@ -98,12 +98,12 @@ char	*get_next_line(int fd)
 	i = 1;
 	while (i)
 	{
-		if (check_static(&ret, stat))
+		if (check_static(&ret, stat[fd]))
 			break ;
-		i = read(fd, stat, BUFFER_SIZE);
+		i = read(fd, stat[fd], BUFFER_SIZE);
 		if (i < 0)
 			break ;
-		stat[i] = '\0';
+		(stat[fd])[i] = '\0';
 	}
 	if (*ret == '\0')
 		free(ret);
