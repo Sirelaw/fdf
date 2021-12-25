@@ -1,18 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   function_test.c                                    :+:      :+:    :+:   */
+/*   input_handling_2.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: oipadeol <oipadeol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/18 06:25:49 by oipadeol          #+#    #+#             */
-/*   Updated: 2021/12/19 12:55:43 by oipadeol         ###   ########.fr       */
+/*   Updated: 2021/12/22 20:28:41 by oipadeol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
-
-//this file handles input
 
 static int	check_input_get_fd(int argc, char **argv)
 {
@@ -38,12 +36,24 @@ static int	check_input_get_fd(int argc, char **argv)
 
 void	print_all(t_list *lst)
 {
+	int	i;
+	int	len;
+	t_int	*elem;
+
+	i = 0;
 	while (lst != NULL)
 	{
-		ft_putstr_fd("line", 1);
+		elem = lst->content;
+		len = elem->size;
+		while (i++ < len)
+		{
+			ft_putnbr_fd((elem->arr)[i - 1], 1);
+			ft_putchar_fd(' ', 1);
+		}
+		i = 0;
 		ft_putchar_fd('\n', 1);
 		lst = lst->next;
-	}
+	}	
 }
 
 t_list	*input_lines(int argc, char **argv)
@@ -51,17 +61,23 @@ t_list	*input_lines(int argc, char **argv)
 	t_list	*input;
 	int		fd;
 	char	*map_string;
-	
+	t_int	*t_map_int;
+
 	fd = check_input_get_fd(argc, argv);
 	map_string = get_next_line(fd);
-ft_putstr_fd(map_string, 1);
-	input = ft_lstnew(map_string);
+	t_map_int = str_to_int(map_string);
+	input = ft_lstnew(t_map_int);
 	while (map_string)
 	{
+		free(map_string);
 		map_string = get_next_line(fd);
-ft_putstr_fd(map_string, 1);
-		ft_lstadd_back(&input, ft_lstnew(map_string));
-	}
-	// print_all(input);
+		if (map_string)
+		{
+			t_map_int = str_to_int(map_string);
+			ft_lstadd_back(&input, ft_lstnew(t_map_int));
+		}
+	}	
+	check_equal_size(input);
+	print_all(input);
 	return (input);
 }
