@@ -1,83 +1,114 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   input_handling_2.c                                 :+:      :+:    :+:   */
+/*   input_handling.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: oipadeol <oipadeol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/12/18 06:25:49 by oipadeol          #+#    #+#             */
-/*   Updated: 2021/12/22 20:28:41 by oipadeol         ###   ########.fr       */
+/*   Created: 2021/12/19 18:51:48 by oipadeol          #+#    #+#             */
+/*   Updated: 2021/12/21 10:30:16 by oipadeol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-static int	check_input_get_fd(int argc, char **argv)
+void	ft_error(void)
 {
-	int	fd;
-	
-	if (argc != 2)
-	{
-		write(1, "*****************************************\n", 42);
-		write(1, "*  Enter the required set of arguments. *\n", 42);
-		write(1, "*Input should have the following format.*\n", 42);
-		write(1, "*$>./fdf map.fdf                        *\n", 42);
-		write(1, "*****************************************\n", 42);
-		exit(1);
-	}
-	fd = open(argv[1], O_RDONLY);
-	if (fd == -1)
-	{
-		perror(argv[1]);
-		exit(1);
-	}
-	return (fd);
+	write(STDERR_FILENO, "Error\n", 6);
+	exit(1);
 }
 
-void	print_all(t_list *lst)
+int	check_equal_size(t_list *input)
 {
-	int	i;
-	int	len;
+	int		len;
 	t_int	*elem;
 
-	i = 0;
-	while (lst != NULL)
+	elem = input->content;
+	len = elem->size;
+	while (input != NULL)
 	{
-		elem = lst->content;
-		len = elem->size;
-		while (i++ < len)
-		{
-			ft_putnbr_fd((elem->arr)[i - 1], 1);
-			ft_putchar_fd(' ', 1);
-		}
-		i = 0;
-		ft_putchar_fd('\n', 1);
-		lst = lst->next;
-	}	
+		elem = input->content;
+		if (elem->size != len)
+			ft_error();
+		input = input->next;
+	}
+	return (1);	
 }
 
-t_list	*input_lines(int argc, char **argv)
+static int	do_atoi(const char *str)
 {
-	t_list	*input;
-	int		fd;
-	char	*map_string;
-	t_int	*t_map_int;
+	int		i;
+	long	num;
+	int		sign;
 
-	fd = check_input_get_fd(argc, argv);
-	map_string = get_next_line(fd);
-	t_map_int = str_to_int(map_string);
-	input = ft_lstnew(t_map_int);
-	while (map_string)
+	i = 0;
+	num = 0;
+	sign = 1;
+	if (str[0] == '\0')
+		return (0);
+	while (ft_strchr(" \n\t\v\f\r", str[i]))
+		i++;
+	if ((str[i] == '-') || (str[i] == '+'))
+		if (str[i] == '-')
+			sign = (-1);
+	if ((str[i] == '-') || (str[i] == '+'))
+		i++;
+	while ((str[i] > 47) && (str[i] < 58))
 	{
-		free(map_string);
-		map_string = get_next_line(fd);
-		if (map_string)
-		{
-			t_map_int = str_to_int(map_string);
-			ft_lstadd_back(&input, ft_lstnew(t_map_int));
-		}
-	}	
-	check_equal_size(input);
-	print_all(input);
-	return (input);
+		num = (num * 10) + (str[i] - 48);
+		if (((num > INT_MAX) || ((num * sign) < INT_MIN))
+			&& (num * sign != INT_MIN))
+			ft_error();
+		i++;
+	}
+	return (sign * num);
+}
+
+static void	digit_check(char *s)
+{
+	int	i;
+
+	i = 0;
+	while ((s[i++] != '\0') && (s[i - 1] != '\n'))
+	{
+		if ((!ft_isdigit(s[i - 1])) && (!(((s[i - 1] == '-')
+						|| (s[i - 1] == '+')) && (i - 1 == 0))))
+			ft_error();
+		if ((((s[i - 1] == '-') || (s[i - 1] == '+'))
+						&& ((s[i] == '\0') || (s[i] == '\n'))))
+			ft_error();
+	}
+	i = 0;
+}
+
+t_int	*str_to_int(char *map_string)
+{
+	int		i;
+	int		len;
+	char	**ch;
+	t_int	*t_arr;
+	int		*arr;
+
+	i = 0;
+	ch = ft_split(map_string, ' ');
+	if (ch == NULL)
+		return (NULL);
+	while (ch[i])
+		i++;
+	if (*(ch[i - 1]) == '\n')
+		ch[--i] = NULL;
+	arr = (int *) ft_calloc(i, sizeof(int));
+	if (arr == NULL)
+		return (NULL);
+	len = i;
+	i = 0;
+	while (ch[i++])
+	{
+		digit_check(ch[i - 1]);
+		arr[i - 1] = do_atoi(ch[i - 1]);
+		free(ch[i - 1]);
+	}
+	free(ch);
+	t_arr = ft_new_t_int(len, arr);//free arr and free t_arr
+	return (t_arr);
 }

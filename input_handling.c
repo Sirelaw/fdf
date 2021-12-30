@@ -5,110 +5,79 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: oipadeol <oipadeol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/12/19 18:51:48 by oipadeol          #+#    #+#             */
-/*   Updated: 2021/12/21 10:30:16 by oipadeol         ###   ########.fr       */
+/*   Created: 2021/12/18 06:25:49 by oipadeol          #+#    #+#             */
+/*   Updated: 2021/12/30 12:54:15 by oipadeol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-void	ft_error(void)
+static int	check_input_get_fd(int argc, char **argv)
 {
-	write(STDERR_FILENO, "Error\n", 6);
-	exit(1);
-}
-
-int	check_equal_size(t_list *input)
-{
-	int		len;
-	t_int	*elem;
-
-	elem = input->content;
-	len = elem->size;
-	while (input != NULL)
+	int	fd;
+	
+	if (argc != 2)
 	{
-		elem = input->content;
-		if (elem->size != len)
-			ft_error();
-		input = input->next;
+		write(1, "*****************************************\n", 42);
+		write(1, "*  Enter the required set of arguments. *\n", 42);
+		write(1, "*Input should have the following format.*\n", 42);
+		write(1, "*$>./fdf map.fdf                        *\n", 42);
+		write(1, "*****************************************\n", 42);
+		exit(1);
 	}
-	return (1);	
-}
-
-static int	do_atoi(const char *str)
-{
-	int		i;
-	long	num;
-	int		sign;
-
-	i = 0;
-	num = 0;
-	sign = 1;
-	if (str[0] == '\0')
-		return (0);
-	while (ft_strchr(" \n\t\v\f\r", str[i]))
-		i++;
-	if ((str[i] == '-') || (str[i] == '+'))
-		if (str[i] == '-')
-			sign = (-1);
-	if ((str[i] == '-') || (str[i] == '+'))
-		i++;
-	while ((str[i] > 47) && (str[i] < 58))
+	fd = open(argv[1], O_RDONLY);
+	if (fd == -1)
 	{
-		num = (num * 10) + (str[i] - 48);
-		if (((num > INT_MAX) || ((num * sign) < INT_MIN))
-			&& (num * sign != INT_MIN))
-			ft_error();
-		i++;
+		perror(argv[1]);
+		exit(1);
 	}
-	return (sign * num);
+	return (fd);
 }
 
-static void	digit_check(char *s)
+void	print_all(t_list *lst)
 {
 	int	i;
+	int	len;
+	t_int	*elem;
 
 	i = 0;
-	while ((s[i++] != '\0') && (s[i - 1] != '\n'))
+	while (lst != NULL)
 	{
-		if ((!ft_isdigit(s[i - 1])) && (!(((s[i - 1] == '-')
-						|| (s[i - 1] == '+')) && (i - 1 == 0))))
-			ft_error();
-		if ((((s[i - 1] == '-') || (s[i - 1] == '+'))
-						&& ((s[i] == '\0') || (s[i] == '\n'))))
-			ft_error();
-	}
-	i = 0;
+		elem = lst->content;
+		len = elem->size;
+		while (i++ < len)
+		{
+			ft_putnbr_fd((elem->arr)[i - 1], 1);
+			ft_putchar_fd(' ', 1);
+		}
+		i = 0;
+		ft_putchar_fd('\n', 1);
+		lst = lst->next;
+	}	
 }
 
-t_int	*str_to_int(char *map_string)
+t_list	*input_lines(int argc, char **argv)
 {
-	int		i;
-	int		len;
-	char	**ch;
-	t_int	*t_arr;
-	int		*arr;
+	t_list	*input;
+	int		fd;
+	char	*map_string;
+	t_int	*t_map_int;
 
-	i = 0;
-	ch = ft_split(map_string, ' ');
-	if (ch == NULL)
-		return (NULL);
-	while (ch[i])
-		i++;
-	if (*(ch[i - 1]) == '\n')
-		ch[--i] = NULL;
-	arr = (int *) ft_calloc(i, sizeof(int));
-	if (arr == NULL)
-		return (NULL);
-	len = i;
-	i = 0;
-	while (ch[i++])
+	fd = check_input_get_fd(argc, argv);
+	map_string = get_next_line(fd);
+	t_map_int = str_to_int(map_string);
+	input = ft_lstnew(t_map_int);
+	while (map_string)
 	{
-		digit_check(ch[i - 1]);
-		arr[i - 1] = do_atoi(ch[i - 1]);
-		free(ch[i - 1]);
-	}
-	free(ch);
-	t_arr = ft_new_t_int(len, arr);//free arr and free t_arr
-	return (t_arr);
+		free(map_string);
+		map_string = get_next_line(fd);
+		if (map_string)
+		{
+			t_map_int = str_to_int(map_string);
+			ft_lstadd_back(&input, ft_lstnew(t_map_int));
+		}
+	}	
+	check_equal_size(input);
+	return (input);
 }
+
