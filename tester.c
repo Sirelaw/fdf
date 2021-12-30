@@ -6,7 +6,7 @@
 /*   By: oipadeol <oipadeol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/29 11:41:51 by oipadeol          #+#    #+#             */
-/*   Updated: 2021/12/30 13:04:09 by oipadeol         ###   ########.fr       */
+/*   Updated: 2021/12/30 21:15:23 by oipadeol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	tester(void)
 {
-	float	state[3];
+	int	state[3];
 	float	teta = -1 * M_PI_4;
 	int t_factor[3];
 	int	i = 0;
@@ -27,7 +27,7 @@ void	tester(void)
 	// t_factor[2] = 4;
 	y_roll(state, &teta);
 	while (i++ < 3)
-		printf("%f\n", state[i - 1]);
+		printf("%i\n", state[i - 1]);
 		// printf("%f\n", sin(*(&teta)));
 
 	// float n = 1.5708;

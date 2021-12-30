@@ -6,7 +6,7 @@
 /*   By: oipadeol <oipadeol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/18 06:28:07 by oipadeol          #+#    #+#             */
-/*   Updated: 2021/12/30 13:21:51 by oipadeol         ###   ########.fr       */
+/*   Updated: 2021/12/30 22:05:47 by oipadeol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -198,8 +198,8 @@ void	draw_wire_frame(t_data *img, t_list *input)
 	int j;
 	int	x_dist;
 	int	y_dist;
-	int x_off = 200;
-	int y_off = 200;
+	int x_off = 0;
+	int y_off = 0;
 	int count;
 	int point = x_off;
 
@@ -207,7 +207,7 @@ void	draw_wire_frame(t_data *img, t_list *input)
 	int	x = 900;
 	int	y = 900;
 
-	i = ((t_int *)(input->content))->size;
+	i = node_lstsize(((t_node *)(input->content)));
 	j = ft_lstsize(input);
 	x_dist = x / bigger(i, j);
 	y_dist = y / bigger(i, j);
@@ -216,7 +216,8 @@ void	draw_wire_frame(t_data *img, t_list *input)
 		count = 0;
 		while (count < i)
 		{
-			point = point + x_dist;
+			if (count != 0)
+				point = point + x_dist;
 			// my_mlx_pixel_put(img, point, y_off - (((t_int *)(input->content))->arr)[count], 0x0000FFFF);
 			// my_mlx_pixel_put(img, point, y_off, 0x0000FFFF);
 			if (count != 0)
@@ -232,6 +233,13 @@ void	draw_wire_frame(t_data *img, t_list *input)
 	}
 }
 
+void	initialize_angles(t_data *img)
+{
+	img->x_ang = M_PI_4;
+	img->y_ang = M_PI_4;
+	img->z_ang = M_PI_4;
+}
+
 int	main(int argc, char **argv)
 {
 	t_vars	vars;
@@ -245,12 +253,13 @@ int	main(int argc, char **argv)
 	img.img = mlx_new_image(vars.mlx, 1800, 1080);
 	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_lenght, 
 		&img.endian);
+	initialize_angles(&img);
 	tester();
 	draw_wire_frame(&img, input);
 	mlx_key_hook(vars.win, key_hook, &vars);
 	mlx_mouse_hook (vars.win, mouse_hook, &vars);
 	mlx_hook(vars.win, 2, 1L<<0, key_hook, &vars);
-	mlx_put_image_to_window(vars.mlx, vars.win, img.img, 0, 0);
+	mlx_put_image_to_window(vars.mlx, vars.win, img.img, 200, 200);
 	mlx_loop(vars.mlx);
 	return (0);
 }
