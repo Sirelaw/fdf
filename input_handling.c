@@ -6,7 +6,7 @@
 /*   By: oipadeol <oipadeol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/18 06:25:49 by oipadeol          #+#    #+#             */
-/*   Updated: 2021/12/30 21:00:48 by oipadeol         ###   ########.fr       */
+/*   Updated: 2021/12/31 10:28:27 by oipadeol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ static int	check_input_get_fd(int argc, char **argv)
 // 	}	
 // }
 
-t_list	*input_lines(int argc, char **argv)
+t_list	*input_rows(int argc, char **argv)
 {
 	t_list	*input;
 	int		fd;

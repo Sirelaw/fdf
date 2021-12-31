@@ -6,7 +6,7 @@
 /*   By: oipadeol <oipadeol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/18 06:26:18 by oipadeol          #+#    #+#             */
-/*   Updated: 2021/12/30 22:49:27 by oipadeol         ###   ########.fr       */
+/*   Updated: 2021/12/31 15:22:31 by oipadeol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,6 @@ typedef struct	s_data{
 	int		bits_per_pixel;
 	int		line_lenght;
 	int		endian;
-	float	x_ang;
-	float	y_ang;
-	float	z_ang;
 }t_data;
 
 typedef struct	s_vars
@@ -40,6 +37,15 @@ typedef struct	s_vars
 	void	*mlx;
 	void	*win;
 }t_vars;
+
+typedef struct	s_img
+{
+	int		x_off;
+	int		y_off;
+	float	x_ang;
+	float	y_ang;
+	float	z_ang;
+}t_img;
 
 typedef struct	s_node
 {
@@ -49,7 +55,7 @@ typedef struct	s_node
 	void	*next;
 }t_node;
 
-t_list	*input_lines(int argc, char **argv);
+t_list	*input_rows(int argc, char **argv);
 int		check_equal_size(t_list *input);
 long	ft_strtol(const char *str, char **end_ptr, int base);
 

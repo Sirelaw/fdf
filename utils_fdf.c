@@ -6,7 +6,7 @@
 /*   By: oipadeol <oipadeol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 10:06:14 by oipadeol          #+#    #+#             */
-/*   Updated: 2021/12/30 23:05:29 by oipadeol         ###   ########.fr       */
+/*   Updated: 2021/12/31 10:26:55 by oipadeol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ t_node *create_new_node(char *str, int row_n, int col_n)
 		free(temp[1]);
 	else
 		new_node->color = 0x00FFFFFF;
-	printf("%d\n", (new_node->point)[2]);
 	(new_node->proj)[0] = 0;
 	(new_node->proj)[1] = 0;
 	new_node->next = NULL;
