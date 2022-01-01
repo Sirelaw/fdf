@@ -6,7 +6,7 @@
 /*   By: oipadeol <oipadeol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/18 06:26:18 by oipadeol          #+#    #+#             */
-/*   Updated: 2021/12/31 15:22:31 by oipadeol         ###   ########.fr       */
+/*   Updated: 2022/01/01 23:33:52 by oipadeol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,28 +24,26 @@
 #include "libft/libft.h"
 #include "get_next_line/get_next_line.h"
 
-typedef struct	s_data{
+typedef struct	s_vars
+{
+	void	*mlx;
+	void	*win;
 	void	*img;
 	char	*addr;
 	int		bits_per_pixel;
 	int		line_lenght;
 	int		endian;
-}t_data;
-
-typedef struct	s_vars
-{
-	void	*mlx;
-	void	*win;
-}t_vars;
-
-typedef struct	s_img
-{
+	int		camera_loc[3];
+	int		camera_dist;
 	int		x_off;
 	int		y_off;
+	int		mesh_dist;
+	int		color_gradient;
 	float	x_ang;
 	float	y_ang;
 	float	z_ang;
-}t_img;
+	t_list	*input;
+}t_vars;
 
 typedef struct	s_node
 {
@@ -64,7 +62,7 @@ void	scale(int state[3], int s_factor[3]);
 void	x_roll(int state[3], float *teta);
 void	y_roll(int state[3], float *teta);
 void	z_roll(int state[3], float *teta);
-void	project(t_node point, int camera[3], int dist, t_data *img);
+void	project_all(t_vars *vars, int camera[3], int dist);
 void	node_lstadd_back(t_node **first, t_node *new_node);
 int		node_lstsize(t_node *node);
 t_node	*create_new_node(char *str, int row_n, int i);

@@ -6,7 +6,7 @@
 /*   By: oipadeol <oipadeol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 10:06:14 by oipadeol          #+#    #+#             */
-/*   Updated: 2021/12/31 10:26:55 by oipadeol         ###   ########.fr       */
+/*   Updated: 2022/01/01 21:50:50 by oipadeol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,11 @@ t_node *create_new_node(char *str, int row_n, int col_n)
 	temp = ft_split(str, ',');
 	if (temp == NULL)
 		return (NULL);
-	(new_node->point)[0] = row_n;
-	(new_node->point)[1] = col_n;
+	(new_node->point)[0] = col_n;
+	(new_node->point)[1] = row_n;
 	(new_node->point)[2] = ft_atoi(temp[0]);
 	if (temp[1])
-		new_node->color = ft_strtol(temp[1], NULL, 16); // work on your strtol
+		new_node->color = ft_strtol(temp[1], NULL, 16);
 	if (temp[1])
 		free(temp[1]);
 	else

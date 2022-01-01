@@ -6,7 +6,7 @@
 /*   By: oipadeol <oipadeol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/18 06:25:49 by oipadeol          #+#    #+#             */
-/*   Updated: 2021/12/31 10:28:27 by oipadeol         ###   ########.fr       */
+/*   Updated: 2021/12/31 20:19:05 by oipadeol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,27 +33,6 @@ static int	check_input_get_fd(int argc, char **argv)
 	}
 	return (fd);
 }
-
-// void	print_all(t_list *lst)
-// {
-// 	int	i;
-// 	int	len;
-
-// 	i = 0;
-// 	while (lst != NULL)
-// 	{
-// 		elem = lst->content;
-// 		len = elem->size;
-// 		while (i++ < len)
-// 		{
-// 			ft_putnbr_fd((elem->arr)[i - 1], 1);
-// 			ft_putchar_fd(' ', 1);
-// 		}
-// 		i = 0;
-// 		ft_putchar_fd('\n', 1);
-// 		lst = lst->next;
-// 	}	
-// }
 
 t_list	*input_rows(int argc, char **argv)
 {

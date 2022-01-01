@@ -2,6 +2,7 @@
 	"files.associations": {
 		"libft.h": "c",
 		"errno.h": "c",
-		"ratio": "c"
+		"ratio": "c",
+		"get_next_line.h": "c"
 	}
 }

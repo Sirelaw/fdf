@@ -6,7 +6,7 @@
 /*   By: oipadeol <oipadeol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/18 06:28:07 by oipadeol          #+#    #+#             */
-/*   Updated: 2021/12/31 15:22:55 by oipadeol         ###   ########.fr       */
+/*   Updated: 2022/01/02 00:46:47 by oipadeol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,18 +28,29 @@ int	absolute(int n)
 		return (n);
 }
 
-void	*mlx_new_image(void *mlx_ptr,int width,int height);
-
-int	key_actions(int keycode, t_img *img_prop)
+void	move_image(int keycode, t_vars *vars)
 {
-	if (keycode == 124)
-	{
-		(img_prop->x_off) += 200;
-		ft_putnbr_fd(img_prop->x_off, 1);
-		ft_putchar_fd(' ', 1);
-		printf("moved right: %d\n", keycode);
-	}
-	return (0);
+	int	n = 5;
+	
+	if (keycode == 123)
+		vars->x_off -= n;
+	else if (keycode == 124)
+		vars->x_off += n;
+	else if (keycode == 125)
+		vars->y_off += n;
+	else if (keycode == 126)
+		vars->y_off -= n;
+}
+
+void	zoom_image(int mousecode, t_vars *vars)
+{
+	int	n = 50;
+	
+	if (mousecode == 4)
+		vars->mesh_dist -= n;
+	else if (mousecode == 5)
+		if ((vars->mesh_dist + 5) < 1080)
+			vars->mesh_dist += n;
 }
 
 int	key_hook(int keycode, t_vars *vars)
@@ -49,17 +60,28 @@ int	key_hook(int keycode, t_vars *vars)
 		mlx_destroy_window(vars->mlx, vars->win);
 		exit(EXIT_SUCCESS);	
 	}
-	printf("Hello from key_code: %d\n", keycode);
+	if ((keycode >= 123) && (keycode <=126))
+		move_image(keycode, vars);
+	else
+		printf("Hello from key_code: %d\n", keycode);
 	return (0);
+}
+
+int	clean_destroy(t_vars *vars)
+{
+	mlx_destroy_window(vars->mlx, vars->win);
+	exit(EXIT_SUCCESS);	
 }
 
 int	mouse_hook(int mousecode, int x, int y, t_vars *vars)
 {
+	if ((mousecode == 4) && (mousecode == 5))
+		zoom_image(mousecode, vars);
 	printf("Hello from mouse_code: %d	%d	%d\n", mousecode, x, y);
 	return (0);
 }
 
-void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
+void	my_mlx_pixel_put(t_vars *data, int x, int y, int color)
 {
 	char	*dst;
 
@@ -67,129 +89,155 @@ void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 	*(unsigned int *)dst = color;
 }
 
-void plotLineLow(int x, int y, int x1, int y1, t_data *img)
+void plotLineLow(int x0_y0[2], int x1_y1[2], t_node *node, t_vars *vars)
 {
 	int	dx;
 	int	dy;
 	int	yi;
 	int	D;
+	int count;
 
-	dx = x1 - x;
-	dy = y1 - y;
+	dx = x1_y1[0] - x0_y0[0];
+	dy = x1_y1[1] - x0_y0[1];
 	yi = 1;
 	D = (2 * dy) - dx;
+	count = 0;
 	if (dy < 0)
 	{	
 	    yi = -1;
 	    dy = -dy;	
 	}
-	while (x <= x1)
+	while (x0_y0[0] <= x1_y1[0])
 	{
-		my_mlx_pixel_put(img, x, y, 0x0000FFFF);
+		my_mlx_pixel_put(vars, x0_y0[0], x0_y0[1], node->color + (vars->color_gradient * count++));
 		if (D > 0)
 		{
-	        y = y + yi;
+	        x0_y0[1] = x0_y0[1] + yi;
 	        D = D + (2 * (dy - dx));		
 		}
 		else
 	        D = D + (2 * dy);
-		x++;
+		(x0_y0[0])++;
 	}
 }
 
-void plotLineHigh(int x, int y, int x1, int y1, t_data *img)
+
+void plotLineHigh(int x0_y0[2], int x1_y1[2], t_node *node, t_vars *vars)
 {
 	int	dx;
 	int	dy;
 	int	xi;
 	int	D;
-	
-	dx = x1 - x;
-	dy = y1 - y;
+	int	count;
+
+	dx = x1_y1[0] - x0_y0[0];
+	dy = x1_y1[1] - x0_y0[1];
 	xi = 1;
 	D = (2 * dx) - dy;
+	count = 0;
 	if (dx < 0)
-	{	
-	    xi = -1;
-	    dx = -dx;	
-	}
-	while (y <= y1)
 	{
-		my_mlx_pixel_put(img, x, y, 0x0000FFFF);
+	    xi = -1;
+	    dx = -dx;
+	}
+	while (x0_y0[1] <= x1_y1[1])
+	{
+		my_mlx_pixel_put(vars, x0_y0[0], x0_y0[1], node->color + (vars->color_gradient * count++));
 		if (D > 0)
 		{
-	        x = x + xi;
+	        x0_y0[0] = x0_y0[0] + xi;
 	        D = D + (2 * (dx - dy));		
 		}
 		else
 	        D = D + (2 * dx);
-		y++;
+		(x0_y0[1])++;
 	}
 }
 
-void	plotLine(int x0, int y0, int x1, int y1, t_data *img)
+void	set_colorgradient(t_node *p_node, t_node *n_node, t_vars *vars, char c)
 {
-    if (absolute(y1 - y0) < absolute(x1 - x0))
+	int		dist;
+	long	color_difference;
+	int		increment;
+
+	if (c == 'x')
+		dist = (p_node->proj[0] - n_node->proj[0]) * vars->mesh_dist;
+	else
+		dist = (p_node->proj[1] - n_node->proj[1]) * vars->mesh_dist;
+	color_difference = n_node->color - p_node->color;
+	increment = color_difference / absolute(dist);
+	vars->color_gradient = increment;
+}
+
+void	plotLine(t_node *p_node, t_node *n_node, t_vars *vars)
+{
+	int x0_y0[2];
+	int	x1_y1[2];
+
+	x0_y0[0] = p_node->proj[0] * vars->mesh_dist;
+	x0_y0[1] = p_node->proj[1] * vars->mesh_dist;
+	x1_y1[0] = n_node->proj[0] * vars->mesh_dist;
+	x1_y1[1] = n_node->proj[1] * vars->mesh_dist;
+	if (absolute(x1_y1[1] - x0_y0[1]) < absolute(x1_y1[0] - x0_y0[0]))
 	{
-        if (x0 > x1)
-            plotLineLow(x1, y1, x0, y0, img);
-        else
-            plotLineLow(x0, y0, x1, y1, img);
+		if (x0_y0[0] > x1_y1[0])
+			set_colorgradient(n_node, p_node, vars, 'x');
+		if (x0_y0[0] > x1_y1[0])
+			plotLineLow(x1_y1, x0_y0, n_node, vars);
+		else
+		{
+			set_colorgradient(p_node, n_node, vars, 'x');
+			plotLineLow(x0_y0, x1_y1, p_node, vars);
+		}
+		return ;
 	}
-    else
+	if (x0_y0[1] > x1_y1[1])
+		set_colorgradient(n_node, p_node, vars, 'y');
+	if (x0_y0[1] > x1_y1[1])
+		plotLineHigh(x1_y1, x0_y0, n_node, vars);
+	else
 	{
-        if (y0 > y1)
-            plotLineHigh(x1, y1, x0, y0, img);
-        else
-            plotLineHigh(x0, y0, x1, y1, img);
+		set_colorgradient(p_node, n_node, vars, 'y');
+		plotLineHigh(x0_y0, x1_y1, p_node, vars);
 	}
 }
 
-void	draw_wire_frame(t_data *img, t_list *input)
+void	draw_wire_frame(t_vars *vars, t_list *input)
 {
 	int i;
 	int j;
-	int	x_dist;
-	int	y_dist;
-	int x_off = 0;
-	int y_off = 0;
-	int count;
-	int point = x_off;
-
-	int flag = 0;
-	int	x = 900;
-	int	y = 900;
+	t_node	*present_node;
+	t_node	*down_node;
 
 	i = node_lstsize(((t_node *)(input->content)));
 	j = ft_lstsize(input);
-	x_dist = x / bigger(i, j);
-	y_dist = y / bigger(i, j);
+	vars->mesh_dist = 500 / bigger(i, j);
 	while (input)
 	{
-		count = 0;
-		while (count < i)
+		present_node = input->content;
+		if (input->next)
+			down_node = (input->next)->content;
+		while (present_node)
 		{
-			if (count != 0)
-				point = point + x_dist;
-			// my_mlx_pixel_put(img, point, y_off - (((t_int *)(input->content))->arr)[count], 0x0000FFFF);
-			// my_mlx_pixel_put(img, point, y_off, 0x0000FFFF);
-			if (count != 0)
-				plotLine(point - x_dist, y_off, point, y_off, img);
-			if (flag != 0)
-				plotLine(point, y_off - y_dist, point, y_off, img);
-			count++;
+			if (present_node->next)
+				plotLine(present_node, present_node->next, vars);
+			if (input->next)
+			{
+				plotLine(present_node, down_node, vars);
+				down_node = down_node->next;
+			}
+			present_node = present_node->next;
 		}
-		point = x_off;
-		y_off = y_off + y_dist;
 		input = input->next;
-		flag = 1;
 	}
 }
 
 void	print_all(t_list *input)
 {
+	t_list	*temp;
 	t_node	*node;
 
+	temp = input;
 	while (input)
 	{
 		node = input->content;
@@ -201,60 +249,60 @@ void	print_all(t_list *input)
 		printf("\n");
 		input = input->next;
 	}
+	while (temp)
+	{
+		node = temp->content;
+		while (node)
+		{
+			printf("(%d, %d) %ld	", (node->proj)[0], (node->proj)[1], node->color);
+			node = node->next;
+		}
+		printf("\n");
+		temp = temp->next;
+	}
 }
 
-int	render_next_frame(t_img *img_prop)
+int	render_next_frame(t_vars *vars)
 {
-	// t_data	*temp;
-	
-	// temp = mlx_new_image(&img,1800,1080);
+	mlx_clear_window(vars->mlx, vars->win);
+	mlx_put_image_to_window(vars->mlx, vars->win, vars->img, vars->x_off, vars->y_off);
 	return (0);
 }
 
-
-void	initialize_angles_offset(t_img *img_prop)
+void	initialize_angles_offset(t_vars *vars)
 {
-	img_prop->x_ang = 0;
-	img_prop->y_ang = 0;
-	img_prop->z_ang = 0;
-	img_prop->x_off = 200;
-	img_prop->y_off = 200;
-	// img->x_ang = M_PI_4;
-	// img->y_ang = M_PI_4;
-	// img->z_ang = M_PI_4;
+	vars->x_off=0;
+	vars->y_off=0;
+	vars->x_ang=0;
+	vars->y_ang=0;
+	vars->z_ang=0;
+	(vars->camera_loc)[0] = 0;
+	(vars->camera_loc)[1] = 0;
+	(vars->camera_loc)[2] = 0;
+	vars->camera_dist = 1;
 }
 
 int	main(int argc, char **argv)
 {
-	t_vars	vars;
-	t_data	img;
-	t_list	*input;
-	t_img	*img_prop;
+	t_vars	*vars;
 
 	errno = 0;
-	input = input_rows(argc, argv);
-	print_all(input);
-	vars.mlx = mlx_init();
-	vars.win = mlx_new_window(vars.mlx, 1800, 1080, "Hello world!");
-	img.img = mlx_new_image(vars.mlx, 1800, 1080);
-	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_lenght,
-		&img.endian);
-	img_prop = malloc(sizeof(t_img));
-	initialize_angles_offset(img_prop);
-	// tester();
-	draw_wire_frame(&img, input);
-	mlx_key_hook(vars.win, key_hook, &vars);
-	mlx_key_hook(vars.win, key_actions, img_prop);
-	mlx_mouse_hook (vars.win, mouse_hook, &vars);
-	mlx_hook(vars.win, 2, 1L<<0, key_hook, &vars);
-	mlx_put_image_to_window(vars.mlx, vars.win, img.img, img_prop->x_off, img_prop->y_off);
-	// mlx_loop_hook(&vars, render_next_frame, img_prop);
-	// ft_putstr_fd("Here\n", 1);
-	mlx_loop(vars.mlx);
-	
-	//temp = mlx_new_image(&img,1800,1080);
+	vars = malloc(sizeof(t_vars));
+	vars->input = input_rows(argc, argv);
+	vars->mlx = mlx_init();
+	vars->win = mlx_new_window(vars->mlx, 1800, 1080, "Hello world!");
+	vars->img = mlx_new_image(vars->mlx, 1800, 1080);
+	vars->addr = mlx_get_data_addr(vars->img, &vars->bits_per_pixel, &vars->line_lenght,
+		&vars->endian);
+	initialize_angles_offset(vars);
+	project_all(vars, vars->camera_loc, vars->camera_dist);
+	// print_all(vars->input);
+	// draw_wire_frame(vars, vars->input);
+	draw_wire_frame(vars, vars->input);
+	mlx_hook(vars->win, 2, 1L<<0, key_hook, vars);
+	mlx_mouse_hook (vars->win, mouse_hook, vars);
+	mlx_put_image_to_window(vars->mlx, vars->win, vars->img, vars->x_off, vars->y_off);
+	mlx_loop_hook(vars->mlx, render_next_frame, vars);
+	mlx_loop(vars->mlx);
 	return (0);
 }
-
-//int	mlx_hook(void *win_ptr, int x_event, int x_mask,
-//                 int (*funct)(), void *param);
