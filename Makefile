@@ -6,7 +6,7 @@
 #    By: oipadeol <oipadeol@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/11/16 20:23:06 by oipadeol          #+#    #+#              #
-#    Updated: 2021/12/31 18:33:54 by oipadeol         ###   ########.fr        #
+#    Updated: 2022/01/03 21:48:52 by oipadeol         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ NAME =	fdf
 CC = gcc
 
 SRC =	main.c input_handling_2.c get_next_line/get_next_line.c input_handling.c\
-		utils_fdf.c matrix_op.c ft_strtol.c tester.c 3D_to_2D.c
+		utils_fdf.c matrix_op.c ft_strtol.c tester.c
 
 # FLAGS = -Wall -Werror -Wextra
 

@@ -5,34 +5,54 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: oipadeol <oipadeol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/12/29 11:41:51 by oipadeol          #+#    #+#             */
-/*   Updated: 2021/12/30 21:15:23 by oipadeol         ###   ########.fr       */
+/*   Created: 2022/01/03 19:37:12 by oipadeol          #+#    #+#             */
+/*   Updated: 2022/01/03 22:43:53 by oipadeol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-void	tester(void)
+void	x_roller(int positon[3], double teta)
 {
-	int	state[3];
-	float	teta = -1 * M_PI_4;
-	int t_factor[3];
-	int	i = 0;
+	double	temp_y;
+	double	temp_z;
 
-	state[0] = 4;
-	state[1] = 3;
-	state[2] = 0;
-	// t_factor[0] = 2;
-	// t_factor[1] = 3;
-	// t_factor[2] = 4;
-	y_roll(state, &teta);
-	while (i++ < 3)
-		printf("%i\n", state[i - 1]);
-		// printf("%f\n", sin(*(&teta)));
+	temp_y = positon[1];
+	temp_z = positon[2];
+	printf("Before (x,y,z): (%d, %d, %d)\n", positon[0], positon[1], positon[2]);
+	positon[1] = (temp_y * cos(teta)) - (temp_z * sin(teta));
+	positon[2] = (temp_y * sin(teta)) + (temp_z * cos(teta));
+	printf("After (x,y,z): (%d, %d, %d)\n", positon[0], positon[1], positon[2]);
+	
+}
 
-	// float n = 1.5708;
-	// float	o = n;
-	// double	t = n;
+void	z_roller(int positon[3], float teta)
+{
+	double	temp;
 
-	// printf("float(%f): %f	double(%f): %f\n", o, cosf(o), t, cos(t));
+	temp = positon[0];
+	printf("Before (x,y,z): (%d, %d, %d)\n", positon[0], positon[1], positon[2]);
+	positon[0] = (temp * cos(teta)) - (positon[1] * sin(teta));
+	positon[1] = (temp * sin(teta)) + (positon[1] * cos(teta));
+	printf("After (x,y,z): (%d, %d, %d)\n", positon[0], positon[1], positon[2]);
+}
+
+void	roll_test(t_list *input)
+{
+	int	position[3];
+	double	teta;
+	t_list	*temp;
+	t_node	*node;
+	teta = -1 * 0.1;
+	
+	while (input)
+	{
+		node = input->content;
+		while (node)
+		{
+			z_roller(node->point, teta);
+			node = node->next;
+		}
+		input = input->next;
+	}
 }

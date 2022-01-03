@@ -6,7 +6,7 @@
 /*   By: oipadeol <oipadeol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/18 06:26:18 by oipadeol          #+#    #+#             */
-/*   Updated: 2022/01/01 23:33:52 by oipadeol         ###   ########.fr       */
+/*   Updated: 2022/01/03 23:39:34 by oipadeol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,23 +33,19 @@ typedef struct	s_vars
 	int		bits_per_pixel;
 	int		line_lenght;
 	int		endian;
-	int		camera_loc[3];
-	int		camera_dist;
-	int		x_off;
-	int		y_off;
-	int		mesh_dist;
+	float	mesh_dist;
+	int		offset[2];
+	int		origin[2];
+	int		need_render;
 	int		color_gradient;
-	float	x_ang;
-	float	y_ang;
-	float	z_ang;
 	t_list	*input;
 }t_vars;
 
 typedef struct	s_node
 {
 	int		point[3];
-	int		proj[2];
 	long	color;
+	float	angles[3];
 	void	*next;
 }t_node;
 
@@ -59,15 +55,19 @@ long	ft_strtol(const char *str, char **end_ptr, int base);
 
 void	translate(int state[3], int t_factor[3]);
 void	scale(int state[3], int s_factor[3]);
-void	x_roll(int state[3], float *teta);
-void	y_roll(int state[3], float *teta);
-void	z_roll(int state[3], float *teta);
-void	project_all(t_vars *vars, int camera[3], int dist);
+void	x_roll(int state[3], double teta);
+void	y_roll(int state[3], float teta);
+void	z_roll(int state[3], float teta);
 void	node_lstadd_back(t_node **first, t_node *new_node);
 int		node_lstsize(t_node *node);
 t_node	*create_new_node(char *str, int row_n, int i);
 t_node	*str_to_row(char *map_string, int row_n);
 t_node	*matrix_node_elem(t_list	*input, int x, int y);
 t_node	*node_n_elem(t_node *node, int n);
-void	tester(void);
+void	print_all(t_list *input);
+int		render_next_frame(t_vars *vars);
+void	set_colorgradient(t_node *p_nod, t_node *n_node, t_vars *vars, char c);
+void	my_mlx_pixel_put(t_vars *vars, int x, int y, int color);
+void	plotLine(t_node *p_node, t_node *n_node, t_vars *vars);
+void	roll_test(t_list *input);
 #endif

@@ -6,7 +6,7 @@
 /*   By: oipadeol <oipadeol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 10:06:14 by oipadeol          #+#    #+#             */
-/*   Updated: 2022/01/01 21:50:50 by oipadeol         ###   ########.fr       */
+/*   Updated: 2022/01/03 23:27:48 by oipadeol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,13 +32,12 @@ t_node *create_new_node(char *str, int row_n, int col_n)
 		free(temp[1]);
 	else
 		new_node->color = 0x00FFFFFF;
-	(new_node->proj)[0] = 0;
-	(new_node->proj)[1] = 0;
 	new_node->next = NULL;
 	free(temp[0]);
 	free(temp);
 	return(new_node);
 }
+
 
 void	node_lstadd_back(t_node **first, t_node *new_node)
 {
@@ -102,3 +101,152 @@ t_node	*matrix_node_elem(t_list	*input, int x, int y)
 		elem = node_n_elem(elem, y);
 	return (elem);
 }
+
+void	print_all(t_list *input)
+{
+	t_list	*temp;
+	t_node	*node;
+
+	while (input)
+	{
+		node = input->content;
+		while (node)
+		{
+			printf("(%d, %d, %d) %ld	", (node->point)[0], (node->point)[1], (node->point)[2], node->color);
+			node = node->next;
+		}
+		printf("\n");
+		input = input->next;
+	}
+}
+
+void	my_mlx_pixel_put(t_vars *vars, int x, int y, int color)
+{
+	char	*dst;
+
+	dst = vars->addr + (y * vars->line_lenght + x * (vars->bits_per_pixel / 8));
+	*(unsigned int *)dst = color;
+}
+
+int	absolute(int n)
+{
+	if ((n < 0) && (n != INT_MIN))
+		return (-1 * n);
+	else
+		return (n);
+}
+
+void	set_colorgradient(t_node *p_node, t_node *n_node, t_vars *vars, char c)
+{
+	int		dist;
+	long	color_difference;
+	int		increment;
+	if (c == 'x')
+		dist = (p_node->point[0] - n_node->point[0]) * vars->mesh_dist;
+	else
+		dist = (p_node->point[1] - n_node->point[1]) * vars->mesh_dist;
+	color_difference = n_node->color - p_node->color;
+	if (dist != 0)
+		increment = color_difference / absolute(dist);
+	else
+		increment = 0;
+	vars->color_gradient = increment;
+}
+
+void plotLineLow(int x0_y0[2], int x1_y1[2], t_node *node, t_vars *vars)
+{
+	int	dx;
+	int	dy;
+	int	yi;
+	int	D;
+	int count;
+
+	dx = x1_y1[0] - x0_y0[0];
+	dy = x1_y1[1] - x0_y0[1];
+	yi = 1;
+	D = (2 * dy) - dx;
+	count = 0;
+	if (dy < 0)
+	{	
+	    yi = -1;
+	    dy = -dy;	
+	}
+	while (x0_y0[0] <= x1_y1[0])
+	{
+		my_mlx_pixel_put(vars, x0_y0[0], x0_y0[1], node->color + (vars->color_gradient * count++));
+		if (D > 0)
+		{
+	        x0_y0[1] = x0_y0[1] + yi;
+	        D = D + (2 * (dy - dx));		
+		}
+		else
+	        D = D + (2 * dy);
+		(x0_y0[0])++;
+	}
+}
+
+void plotLineHigh(int x0_y0[2], int x1_y1[2], t_node *node, t_vars *vars)
+{
+	int	dx;
+	int	dy;
+	int	xi;
+	int	D;
+	int	count;
+
+	dx = x1_y1[0] - x0_y0[0];
+	dy = x1_y1[1] - x0_y0[1];
+	xi = 1;
+	D = (2 * dx) - dy;
+	count = 0;
+	if (dx < 0)
+	{
+	    xi = -1;
+	    dx = -dx;
+	}
+	while (x0_y0[1] <= x1_y1[1])
+	{
+		my_mlx_pixel_put(vars, x0_y0[0], x0_y0[1], node->color + (vars->color_gradient * count++));
+		if (D > 0)
+		{
+	        x0_y0[0] = x0_y0[0] + xi;
+	        D = D + (2 * (dx - dy));		
+		}
+		else
+	        D = D + (2 * dx);
+		(x0_y0[1])++;
+	}
+}
+
+void	plotLine(t_node *p_node, t_node *n_node, t_vars *vars)
+{
+	int x0_y0[2];
+	int	x1_y1[2];
+
+	x0_y0[0] = (p_node->point[0] * vars->mesh_dist) + vars->origin[0];
+	x0_y0[1] = (p_node->point[1] * vars->mesh_dist) + vars->origin[1];
+	x1_y1[0] = (n_node->point[0] * vars->mesh_dist) + vars->origin[0];
+	x1_y1[1] = (n_node->point[1] * vars->mesh_dist) + vars->origin[1];
+	if (absolute(x1_y1[1] - x0_y0[1]) < absolute(x1_y1[0] - x0_y0[0]))
+	{
+		if (x0_y0[0] > x1_y1[0])
+			set_colorgradient(n_node, p_node, vars, 'x');
+		if (x0_y0[0] > x1_y1[0])
+			plotLineLow(x1_y1, x0_y0, n_node, vars);
+		else
+		{
+			set_colorgradient(p_node, n_node, vars, 'x');
+			plotLineLow(x0_y0, x1_y1, p_node, vars);
+		}
+		return ;
+	}
+	if (x0_y0[1] > x1_y1[1])
+		set_colorgradient(n_node, p_node, vars, 'y');
+	if (x0_y0[1] > x1_y1[1])
+		plotLineHigh(x1_y1, x0_y0, n_node, vars);
+	else
+	{
+		set_colorgradient(p_node, n_node, vars, 'y');
+		plotLineHigh(x0_y0, x1_y1, p_node, vars);
+	}
+}
+
