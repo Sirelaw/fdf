@@ -6,7 +6,7 @@
 /*   By: oipadeol <oipadeol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 10:06:14 by oipadeol          #+#    #+#             */
-/*   Updated: 2022/01/03 23:27:48 by oipadeol         ###   ########.fr       */
+/*   Updated: 2022/01/04 12:31:45 by oipadeol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ t_node *create_new_node(char *str, int row_n, int col_n)
 	free(temp);
 	return(new_node);
 }
-
 
 void	node_lstadd_back(t_node **first, t_node *new_node)
 {
@@ -142,9 +141,9 @@ void	set_colorgradient(t_node *p_node, t_node *n_node, t_vars *vars, char c)
 	long	color_difference;
 	int		increment;
 	if (c == 'x')
-		dist = (p_node->point[0] - n_node->point[0]) * vars->mesh_dist;
+		dist = (p_node->point[0] - n_node->point[0]) * vars->s_factor;
 	else
-		dist = (p_node->point[1] - n_node->point[1]) * vars->mesh_dist;
+		dist = (p_node->point[1] - n_node->point[1]) * vars->s_factor;
 	color_difference = n_node->color - p_node->color;
 	if (dist != 0)
 		increment = color_difference / absolute(dist);
@@ -222,10 +221,10 @@ void	plotLine(t_node *p_node, t_node *n_node, t_vars *vars)
 	int x0_y0[2];
 	int	x1_y1[2];
 
-	x0_y0[0] = (p_node->point[0] * vars->mesh_dist) + vars->origin[0];
-	x0_y0[1] = (p_node->point[1] * vars->mesh_dist) + vars->origin[1];
-	x1_y1[0] = (n_node->point[0] * vars->mesh_dist) + vars->origin[0];
-	x1_y1[1] = (n_node->point[1] * vars->mesh_dist) + vars->origin[1];
+	x0_y0[0] = (p_node->proj[0] * vars->s_factor) + vars->origin[0];
+	x0_y0[1] = (p_node->proj[1] * vars->s_factor) + vars->origin[1];
+	x1_y1[0] = (n_node->proj[0] * vars->s_factor) + vars->origin[0];
+	x1_y1[1] = (n_node->proj[1] * vars->s_factor) + vars->origin[1];
 	if (absolute(x1_y1[1] - x0_y0[1]) < absolute(x1_y1[0] - x0_y0[0]))
 	{
 		if (x0_y0[0] > x1_y1[0])
@@ -250,3 +249,21 @@ void	plotLine(t_node *p_node, t_node *n_node, t_vars *vars)
 	}
 }
 
+void	project_all(t_list *input)
+{
+	t_list	*temp;
+	t_node	*node;
+
+	while (input)
+	{
+		node = input->content;
+		while (node)
+		{
+			node->proj[0] = node->point[0];
+			node->proj[1] = node->point[1];
+			node->proj[2] = node->point[2];
+			node = node->next;
+		}
+		input = input->next;
+	}
+}

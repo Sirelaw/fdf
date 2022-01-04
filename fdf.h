@@ -6,7 +6,7 @@
 /*   By: oipadeol <oipadeol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/18 06:26:18 by oipadeol          #+#    #+#             */
-/*   Updated: 2022/01/03 23:39:34 by oipadeol         ###   ########.fr       */
+/*   Updated: 2022/01/04 13:25:51 by oipadeol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,11 @@ typedef struct	s_vars
 	int		bits_per_pixel;
 	int		line_lenght;
 	int		endian;
-	float	mesh_dist;
+	float	s_factor;
 	int		offset[2];
 	int		origin[2];
+	double	angle[3];
+	int		rotate_flag[3];
 	int		need_render;
 	int		color_gradient;
 	t_list	*input;
@@ -44,8 +46,8 @@ typedef struct	s_vars
 typedef struct	s_node
 {
 	int		point[3];
+	int		proj[3];
 	long	color;
-	float	angles[3];
 	void	*next;
 }t_node;
 
@@ -54,10 +56,10 @@ int		check_equal_size(t_list *input);
 long	ft_strtol(const char *str, char **end_ptr, int base);
 
 void	translate(int state[3], int t_factor[3]);
-void	scale(int state[3], int s_factor[3]);
+void	project_all(t_list	*input);
 void	x_roll(int state[3], double teta);
-void	y_roll(int state[3], float teta);
-void	z_roll(int state[3], float teta);
+void	y_roll(int state[3], double teta);
+void	z_roll(int state[3], double teta);
 void	node_lstadd_back(t_node **first, t_node *new_node);
 int		node_lstsize(t_node *node);
 t_node	*create_new_node(char *str, int row_n, int i);

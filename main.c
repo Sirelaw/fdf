@@ -6,7 +6,7 @@
 /*   By: oipadeol <oipadeol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/18 06:28:07 by oipadeol          #+#    #+#             */
-/*   Updated: 2022/01/03 23:57:14 by oipadeol         ###   ########.fr       */
+/*   Updated: 2022/01/04 13:22:35 by oipadeol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	bigger(int n1, int n2)
 		return (n2);
 }
 
-void	x_roll_all(t_list *input, double teta)
+void	x_roll_all(t_list *input, double teta, int rotate_flag[3])
 {
 	t_node	*node;
 
@@ -29,14 +29,14 @@ void	x_roll_all(t_list *input, double teta)
 		node = input->content;
 		while (node)
 		{
-			x_roll(node->point, teta);
+			x_roll(node->proj, teta);
 			node = node->next;
 		}
 		input = input->next;
 	}
 }
 
-void	y_roll_all(t_list *input, double teta)
+void	y_roll_all(t_list *input, double teta, int rotate_flag[3])
 {
 	t_node	*node;
 
@@ -45,14 +45,14 @@ void	y_roll_all(t_list *input, double teta)
 		node = input->content;
 		while (node)
 		{
-			y_roll(node->point, teta);
+			y_roll(node->proj, teta);
 			node = node->next;
 		}
 		input = input->next;
 	}
 }
 
-void	z_roll_all(t_list *input, double teta)
+void	z_roll_all(t_list *input, double teta, int rotate_flag[3])
 {
 	t_node	*node;
 
@@ -61,7 +61,7 @@ void	z_roll_all(t_list *input, double teta)
 		node = input->content;
 		while (node)
 		{
-			z_roll(node->point, teta);
+			z_roll(node->proj, teta);
 			node = node->next;
 		}
 		input = input->next;
@@ -72,19 +72,21 @@ void	rotate_image(int keycode, t_vars *vars)
 {
 	double	n;
 	
-	n = 0.1;
+	n = M_PI_4 / 10;
+	project_all(vars->input);
 	if (keycode == 0)
-		y_roll_all(vars->input, -0.1);
+		y_roll_all(vars->input, vars->angle[1] -= n, vars->rotate_flag);
 	else if (keycode == 2)
-		y_roll_all(vars->input, 0.1);
+		y_roll_all(vars->input, vars->angle[1] += n, vars->rotate_flag);
 	else if (keycode == 13)
-		x_roll_all(vars->input, 0.1);
+		x_roll_all(vars->input, vars->angle[0] += n, vars->rotate_flag);
 	else if (keycode == 1)
-		x_roll_all(vars->input, -0.1);
+		x_roll_all(vars->input, vars->angle[0] -= n, vars->rotate_flag);
 	else if (keycode == 12)
-		z_roll_all(vars->input, -0.1);
+		z_roll_all(vars->input, vars->angle[2] += n, vars->rotate_flag);
 	else if (keycode == 14)
-		z_roll_all(vars->input, 0.1);
+		z_roll_all(vars->input, vars->angle[2] -= n, vars->rotate_flag);
+	vars->need_render = 1;
 }
 
 void	move_image(int keycode, t_vars *vars)
@@ -107,12 +109,12 @@ void	zoom_image(int mousecode, t_vars *vars)
 	float	n = 1.1;
 	
 	if (mousecode == 4)
-		vars->mesh_dist = vars->mesh_dist / n;
+		vars->s_factor = vars->s_factor / n;
 	else if (mousecode == 5)
-		if ((vars->mesh_dist + 5) < 1080)
-			vars->mesh_dist *= n;
-	if (vars->mesh_dist < 1)
-		vars->mesh_dist = 1;
+		if ((vars->s_factor + 5) < 1080)
+			vars->s_factor *= n;
+	if (vars->s_factor < 1)
+		vars->s_factor = 1;
 	vars->need_render = 1;
 }
 
@@ -230,8 +232,18 @@ void	initialize_angles_offset(t_vars *vars)
 	vars->offset[1] = 0;
 	vars->origin[0] = 500;
 	vars->origin[1] = 500;
-	vars->mesh_dist = 1;
+	vars->angle[0] = M_PI_4 / 2;
+	vars->angle[1] = M_PI_4 / 2;
+	vars->angle[2] = M_PI_4 / 2;
+	vars->s_factor = 1;
+	vars->rotate_flag[0] = 0;
+	vars->rotate_flag[1] = 0;
+	vars->rotate_flag[2] = 0;
 	vars->need_render = 1;
+	project_all(vars->input);
+	x_roll_all(vars->input, vars->angle[0]);
+	y_roll_all(vars->input, vars->angle[1]);
+	z_roll_all(vars->input, vars->angle[2]);
 }
 
 int	main(int argc, char **argv)
@@ -243,8 +255,6 @@ int	main(int argc, char **argv)
 	vars = malloc(sizeof(t_vars));
 	vars->input = input_rows(argc, argv);
 	initialize_angles_offset(vars);
-	// while (i--)
-	// roll_test(vars->input);
 	vars->mlx = mlx_init();
 	vars->win = mlx_new_window(vars->mlx, 1800, 1080, "FT_FDF");
 	vars->img = mlx_new_image(vars->mlx, 1800, 1080);
