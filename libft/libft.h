@@ -6,7 +6,7 @@
 /*   By: oipadeol <oipadeol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/05 22:10:30 by oipadeol          #+#    #+#             */
-/*   Updated: 2021/12/10 06:06:24 by oipadeol         ###   ########.fr       */
+/*   Updated: 2022/01/05 15:03:17 by oipadeol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,9 @@ int		ft_isalpha(int c);
 int		ft_isascii(int c);
 int		ft_isdigit(int a);
 int		ft_isprint(int c);
+int		ft_bigger(int n1, int n2);
+// Returns the abs value of n
+int		ft_absolute(int n);
 // Allocates (with malloc(3)) and returns a string representing the integer
 // received as an argument.Negative numbers are handled.
 char	*ft_itoa(int n);
@@ -108,6 +111,9 @@ char	*ft_strtrim(char const *s1, char const *set);
 char	*ft_substr(char const *string, unsigned int start, size_t len);
 int		ft_tolower(int c);
 int		ft_toupper(int c);
+// Converts the string str to long value depending on the base and given
+// terminator (NULL in most cases)
+long	ft_strtol(const char *str, char **end_ptr, int base);
 // Allocates (with malloc(3)) and returns a newelement. The variable ’content’
 // is initialized with the value of the parameter ’content’.
 // The variable ’next’ is initialized to NULL.
