@@ -6,11 +6,11 @@
 /*   By: oipadeol <oipadeol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 10:06:14 by oipadeol          #+#    #+#             */
-/*   Updated: 2022/01/06 00:57:34 by oipadeol         ###   ########.fr       */
+/*   Updated: 2022/01/06 21:58:40 by oipadeol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../fdf.h"
+#include "../../includes/fdf.h"
 
 t_node	*create_new_node(char *str, int row_n, int col_n)
 {

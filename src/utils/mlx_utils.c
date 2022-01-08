@@ -6,11 +6,11 @@
 /*   By: oipadeol <oipadeol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/05 15:15:33 by oipadeol          #+#    #+#             */
-/*   Updated: 2022/01/06 05:01:44 by oipadeol         ###   ########.fr       */
+/*   Updated: 2022/01/08 11:44:06 by oipadeol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../fdf.h"
+#include "../../includes/fdf.h"
 
 void	my_mlx_pixel_put(t_vars *vars, int x, int y, int color)
 {

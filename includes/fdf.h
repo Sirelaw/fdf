@@ -6,7 +6,7 @@
 /*   By: oipadeol <oipadeol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/18 06:26:18 by oipadeol          #+#    #+#             */
-/*   Updated: 2022/01/06 04:12:46 by oipadeol         ###   ########.fr       */
+/*   Updated: 2022/01/08 11:52:54 by oipadeol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <limits.h>
-# include "mlx/mlx.h"
-# include "libft/libft.h"
-# include "get_next_line/get_next_line.h"
+# include "../mlx/mlx.h"
+# include "../libft/libft.h"
+# include "get_next_line.h"
 
 typedef struct s_vars
 {
@@ -63,6 +63,7 @@ void	z_roll_all(t_list *input, double teta);
 void	rotate_image(int keycode, t_vars *vars);
 void	move_image(int keycode, t_vars *vars);
 void	zoom_image(int mousecode, int x, int y, t_vars *vars);
+void	get_map_size(t_vars *vars);
 void	node_lstadd_back(t_node **first, t_node *new_node);
 int		node_lstsize(t_node *node);
 t_node	*create_new_node(char *str, int row_n, int i);

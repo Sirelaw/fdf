@@ -6,11 +6,11 @@
 /*   By: oipadeol <oipadeol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/05 14:39:00 by oipadeol          #+#    #+#             */
-/*   Updated: 2022/01/05 14:54:02 by oipadeol         ###   ########.fr       */
+/*   Updated: 2022/01/06 21:58:46 by oipadeol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../fdf.h"
+#include "../../includes/fdf.h"
 
 static void	init_v(int *dxy, int *xyi, int *count)
 {

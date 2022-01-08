@@ -6,11 +6,11 @@
 /*   By: oipadeol <oipadeol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/05 14:43:26 by oipadeol          #+#    #+#             */
-/*   Updated: 2022/01/06 05:10:28 by oipadeol         ###   ########.fr       */
+/*   Updated: 2022/01/06 21:59:03 by oipadeol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../fdf.h"
+#include "../../includes/fdf.h"
 
 void	set_colorgradient(t_node *p_node, t_node *n_node, t_vars *vars, char c)
 {

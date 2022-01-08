@@ -6,11 +6,17 @@
 /*   By: oipadeol <oipadeol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/19 13:06:57 by oipadeol          #+#    #+#             */
-/*   Updated: 2021/12/19 16:17:32 by oipadeol         ###   ########.fr       */
+/*   Updated: 2022/01/08 11:34:41 by oipadeol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "../includes/get_next_line.h"
+
+void	free_ret(char **ret)
+{
+	free(*ret);
+	*ret = NULL;
+}
 
 void	join_ret_stat(char **ret, char stat[BUFFER_SIZE + 1], int i, int j)
 {
@@ -106,8 +112,6 @@ char	*get_next_line(int fd)
 		stat[i] = '\0';
 	}
 	if (*ret == '\0')
-		free(ret);
-	if (*ret == '\0')
-		ret = NULL;
+		free_ret(&ret);
 	return (ret);
 }

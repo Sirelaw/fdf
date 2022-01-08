@@ -6,11 +6,11 @@
 /*   By: oipadeol <oipadeol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/06 00:56:49 by oipadeol          #+#    #+#             */
-/*   Updated: 2022/01/06 02:32:40 by oipadeol         ###   ########.fr       */
+/*   Updated: 2022/01/06 21:58:22 by oipadeol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../fdf.h"
+#include "../../includes/fdf.h"
 
 static void	free_row_nodes(t_node *node, void(*f)(void *))
 {

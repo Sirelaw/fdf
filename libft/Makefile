@@ -6,13 +6,17 @@
 #    By: oipadeol <oipadeol@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/09/13 19:02:48 by oipadeol          #+#    #+#              #
-#    Updated: 2022/01/06 05:29:19 by oipadeol         ###   ########.fr        #
+#    Updated: 2022/01/06 20:23:59 by oipadeol         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 # # _*_ MakeFile _*_
 
 NAME = libft.a
+
+FLAGS = -Wall -Wextra -Werror
+
+OBJ_DIR = ./obj/
 
 SRC = 	ft_atoi.c ft_bzero.c ft_calloc.c ft_isalpha.c ft_isalnum.c ft_isascii.c\
 		ft_isdigit.c ft_isascii.c ft_strlen.c ft_memset.c ft_memcpy.c \
@@ -26,29 +30,30 @@ SRC = 	ft_atoi.c ft_bzero.c ft_calloc.c ft_isalpha.c ft_isalnum.c ft_isascii.c\
 		ft_lstadd_back.c ft_lstdelone.c ft_lstclear.c ft_lstiter.c\
 		ft_lstmap.c ft_lstelem.c
 
-OBJ = obj_files
+OBJ_FILES = $(SRC:.c=.o)
 
-FLAGS = -Wall -Wextra -Werror
+OBJ_DIR = ./obj/
 
-all: $(NAME)
+OBJ = $(addprefix $(OBJ_DIR), $(OBJ_FILES))
 
-$(NAME): $(SRC)
-	@$(MAKE) -s lib
+all: obj $(NAME)
+
+$(OBJ_DIR)%.o:%.c
+	@gcc -c $(FLAGS) $(SRC)
+	@mv *.o $(OBJ_DIR)
+
+$(NAME): $(OBJ)
+	@ar -cr $(NAME) $(OBJ)
 	@echo "libft library created."
 
-lib: objects
-	ar -cr $(NAME) $(OBJ)/*.o
+obj:
+	@mkdir -p $(OBJ_DIR)
 	
-objects:
-	gcc -c $(FLAGS) $(SRC)
-	@mv *.o $(OBJ)
-
 clean:
-	@rm -f $(OBJ)/*.o
+	@rm -f $(OBJ)
 	@echo "*.o files deleted"
 
-fclean:
-	@$(MAKE) clean -s
+fclean: clean
 	@rm -f $(NAME)
 	@echo "libft library deleted."
 

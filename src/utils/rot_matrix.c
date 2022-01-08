@@ -6,11 +6,11 @@
 /*   By: oipadeol <oipadeol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/29 11:14:53 by oipadeol          #+#    #+#             */
-/*   Updated: 2022/01/05 00:44:47 by oipadeol         ###   ########.fr       */
+/*   Updated: 2022/01/06 21:58:51 by oipadeol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../fdf.h"
+#include "../../includes/fdf.h"
 
 void	z_roll(t_node *node, double teta)
 {

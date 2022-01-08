@@ -6,11 +6,11 @@
 /*   By: oipadeol <oipadeol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/19 18:51:48 by oipadeol          #+#    #+#             */
-/*   Updated: 2022/01/06 02:31:29 by oipadeol         ###   ########.fr       */
+/*   Updated: 2022/01/06 22:01:21 by oipadeol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../fdf.h"
+#include "../../includes/fdf.h"
 
 void	ft_error(void)
 {

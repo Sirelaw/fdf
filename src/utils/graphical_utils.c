@@ -6,17 +6,17 @@
 /*   By: oipadeol <oipadeol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/05 15:46:05 by oipadeol          #+#    #+#             */
-/*   Updated: 2022/01/06 04:17:22 by oipadeol         ###   ########.fr       */
+/*   Updated: 2022/01/07 15:26:34 by oipadeol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../fdf.h"
+#include "../../includes/fdf.h"
 
 void	move_image(int keycode, t_vars *vars)
 {
 	int	n;
 
-	n = 4;
+	n = 10;
 	if (keycode == 123)
 		vars->off[0] -= n;
 	else if (keycode == 124)
@@ -44,6 +44,35 @@ void	zoom_image(int mousecode, int x, int y, t_vars *vars)
 		vars->off[0] = vars->off[0] + (vars->oo[0] - x) / 5;
 		vars->off[1] = vars->off[1] + (vars->oo[1] - y) / 5;
 	}
+}
+
+void	get_map_size(t_vars *vars)
+{
+	int	i;
+	int	j;
+
+	i = node_lstsize((t_node *)(vars->input->content));
+	j = ft_lstsize(vars->input);
+	if (i <= 50)
+		vars->map_w = j * 30;
+	else
+		vars->map_w = i * 5;
+	if (j <= 50)
+		vars->map_l = j * 30;
+	else
+		vars->map_l = j * 5;
+	if (i > 100)
+		vars->s_factor = 0.2;
+	else
+		vars->s_factor = 1;
+	if (vars->map_w < 500)
+		vars->map_w = 500;
+	if (vars->map_l < 500)
+		vars->map_l = 500;
+	if (vars->map_l > 1300)
+		vars->map_l = 1300;
+	vars->oo[0] = vars->map_w / 2;
+	vars->oo[1] = vars->map_l / 2;
 }
 
 static void	reset_all_color(t_vars *vars, int max, int min)

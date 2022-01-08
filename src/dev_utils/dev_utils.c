@@ -6,11 +6,11 @@
 /*   By: oipadeol <oipadeol@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/05 15:11:09 by oipadeol          #+#    #+#             */
-/*   Updated: 2022/01/06 01:44:20 by oipadeol         ###   ########.fr       */
+/*   Updated: 2022/01/06 21:45:38 by oipadeol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../fdf.h"
+#include "../includes/fdf.h"
 
 void	print_all(t_list *input)
 {
