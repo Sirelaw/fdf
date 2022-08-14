@@ -1,7 +1,7 @@
 # fdf 125/100
 This is my solution for the fdf project of 42 school.<br>
 
-![result](https://github.com/Sirelaw/fdf/blob/master/readme_addons/Screen%20Shot%202022-08-14%20at%201.17.34%20AM.png)
+![result](https://github.com/Sirelaw/fdf/blob/master/readme_addons/Screen%20Shot%202022-08-14%20at%202.54.19%20AM.png)
 
 ## This code is capable of
 - reading from a correctly parsed fdf file.
@@ -41,4 +41,4 @@ To visualize more maps like the one below.<br>
 ## visualization two maps from the maps/test_maps folder.
 more maps can be found in this folder.
 
-![visualizer](https://github.com/Sirelaw/42_curcus_fdf/blob/master/readme_addons/Screen-Recording-2022-08-14-at-1.27.54-AM.gif)
+![visualizer](https://github.com/Sirelaw/fdf/blob/master/readme_addons/Screen-Recording-2022-08-14-at-2.47.26-AM.gif)
