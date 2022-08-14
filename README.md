@@ -41,4 +41,4 @@ To visualize more maps like the one below.<br>
 ## visualizing two maps from the maps/test_maps folder.
 more maps can be found in this folder.
 
-![visualizer](https://github.com/Sirelaw/fdf/blob/master/readme_addons/Screen-Recording-2022-08-14-at-2.47.26-AM.gif)
+![visualizer](https://github.com/Sirelaw/fdf/blob/master/readme_addons/sample.gif)
